@@ -1,0 +1,80 @@
+Here’s a simple React code structure you can use for the product listing app described in your image! 🛒
+
+*This example uses useState, useEffect, and react-router-dom for navigation.*
+
+jsx
+// App.js
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from "react-router-dom";
+
+// Products List Component
+function ProductsList() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("https://fakestoreapi.com/products") // Replace with your own REST API.then(res => res.json()).then(data => setProducts(data)).catch(err => alert("Error fetching products!")).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: "1rem" }}>
+      {products.map(product => (
+        <Link
+          key={product.id}
+          to={`/product/${product.id}`}
+          style={{
+            border: "1px solid #eee", padding: "1rem", width: "200px",
+            textDecoration: "none", color: "inherit"
+          }}
+        >
+          <img src={product.image} alt={product.title} height={100} style={{ objectFit: "contain" }} />
+          <h4>{product.title}</h4>
+          <p>₹{product.price}</p>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+// Product Detail Component
+function ProductDetail() {
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    fetch(`https://fakestoreapi.com/products/${id}`) // Replace with your own API.then(res => res.json()).then(data => setProduct(data)).catch(err => alert("Error fetching details!"));
+  }, [id]);
+
+  if (!product) return <div>Loading...</div>;
+
+  return (
+    <div style={{ padding: "2rem" }}>
+      <img src={product.image} alt={product.title} height={200} />
+      <h2>{product.title}</h2>
+      <p><b>Price:</b> ₹{product.price}</p>
+      <p>{product.description}</p>
+      <Link to="/">Back to Products</Link>
+    </div>
+  );
+}
+
+// Main App
+export default function App() {
+  return (
+    <Router>
+      <h1 style={{ textAlign: "center" }}>Product Store</h1>
+      <Routes>
+        <Route path="/" element={<ProductsList />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+      </Routes>
+    </Router>
+  );
+}
+
+
+- This covers list view, detail view, API integration, navigation, and basic styling.
+- Use npm install react-router-dom if you haven’t already.
+
+Want help connecting this to your own backend API or more advanced styling tips? 😊
